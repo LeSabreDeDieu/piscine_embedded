@@ -6,30 +6,46 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 12:49:04 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/03 16:54:10 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/03 17:23:15 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <avr/io.h>
+#include <util/delay.h>
+
+int is_released( int switch_num ) {
+    volatile uint8_t i = 0;
+
+    i = 0;
+    if (!(PIND & (1 << switch_num))) {
+        _delay_ms(20);
+        i++;
+    }
+    if ((PIND & (1 << switch_num))) {
+        i++;
+    }
+    if (i == 2) {
+        return 1;
+    }
+    return 0;
+}
 
 int main(void) {
-    DDRB |= (1 << PB0);
-    PORTB &= ~(1 << PB0);
+    DDRB |= ((1 << PB0) | (1 << PB1) | (1 << PB2) | (1 << PB4));
+    PORTB &= ~((1 << PB0) | (1 << PB1) | (1 << PB2) | (1 << PB4));
+
+    uint8_t val = 0;
 
     while (1) {
-        // Le PINX est un registre un peu speciale, il est en READ only.
-        // Le PINX nous permet de connaitre l'etat d'un composant.
-        // Si le PINX est a 1, le composant est utilise. 0 sinon
-        // SAUF pour le switch ou il est inverse a cause (ou grace) aux resistance utilise (voir schemas).
-        
-        // Ici, on selectionne le switch PIND2, et on regarde son etat.
-        // Si le bouton est a 0, on allume la LED
-        // Si non, on eteint la LED
-        if (!(PIND & (1 << PIND2))) {
-            PORTB |= (1 << PB0);
-        } else {
-            PORTB &= ~(1 << PB0);
-        }
+        if (is_released(PIND2)) { val++; } 
+        else if (is_released(PIND4)) { val--; }
+
+        PORTB = (PORTB & ~((1 << PB0) | (1 << PB1) | (1 << PB2) | (1 << PB4))) |
+                ((val & 1 << 0)) |
+                ((val & 1 << 1)) |
+                ((val & 1 << 2)) |
+                ((val & 1 << 3)) << 1;
     }
+    
     return 0;
 }

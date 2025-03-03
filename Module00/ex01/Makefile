@@ -6,7 +6,7 @@
 #    By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 10:04:44 by sgabsi            #+#    #+#              #
-#    Updated: 2025/03/03 15:37:12 by sgabsi           ###   ########.fr        #
+#    Updated: 2025/03/03 17:26:35 by sgabsi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -82,6 +82,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 		$(TOTAL_FILES) \
 		$<
 	$(eval COUNT=$(shell echo $$(($(COUNT)+1))))
+	@printf "\n"
 
 flash: $(HEX_NAME)
 	@echo "\033[0;33mFlashing $(HEX_NAME) to microcontroller...\033[0m"

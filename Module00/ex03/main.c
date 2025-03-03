@@ -6,29 +6,37 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 12:49:04 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/03 16:54:10 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/03 17:04:26 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <avr/io.h>
+#include <util/delay.h>
 
 int main(void) {
     DDRB |= (1 << PB0);
     PORTB &= ~(1 << PB0);
+    volatile uint8_t i = 0;
 
+    // Pareil que l'exercice precedent, sauf que cette fois on doit faire en sorte qu'a chaque relachement
+    // la LED inverse son etat (d'eteint vers allumer et inversement).
     while (1) {
-        // Le PINX est un registre un peu speciale, il est en READ only.
-        // Le PINX nous permet de connaitre l'etat d'un composant.
-        // Si le PINX est a 1, le composant est utilise. 0 sinon
-        // SAUF pour le switch ou il est inverse a cause (ou grace) aux resistance utilise (voir schemas).
-        
-        // Ici, on selectionne le switch PIND2, et on regarde son etat.
-        // Si le bouton est a 0, on allume la LED
-        // Si non, on eteint la LED
+        i = 0;
+        // Les 2 prochains if, permet de tester si le switch est presser ou pas.
+        // De plus, il permet aussi de regler le probleme de bounce.
         if (!(PIND & (1 << PIND2))) {
-            PORTB |= (1 << PB0);
-        } else {
-            PORTB &= ~(1 << PB0);
+            _delay_ms(20);
+            i++;
+        }
+        if ((PIND & (1 << PIND2))) {
+            _delay_ms(20);
+            i++;
+        }
+
+        // Si le switch passe dans les 2 etats dans la meme boucle, c'est qu'il vient d'etre appuyer puis relacher
+        // et donc il peut inverse sont etat.
+        if (i == 2) {
+            PORTB ^= (1 << PB0);
         }
     }
     return 0;
