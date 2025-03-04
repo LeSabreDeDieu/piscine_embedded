@@ -6,13 +6,14 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 12:49:04 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/03 17:23:15 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/04 09:52:55 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <avr/io.h>
 #include <util/delay.h>
 
+// Voir exercice 3 pour l'explication
 int is_released( int switch_num ) {
     volatile uint8_t i = 0;
 
@@ -31,6 +32,7 @@ int is_released( int switch_num ) {
 }
 
 int main(void) {
+    //Voir exercice 1 pour l'explication
     DDRB |= ((1 << PB0) | (1 << PB1) | (1 << PB2) | (1 << PB4));
     PORTB &= ~((1 << PB0) | (1 << PB1) | (1 << PB2) | (1 << PB4));
 
@@ -46,6 +48,4 @@ int main(void) {
                 ((val & 1 << 2)) |
                 ((val & 1 << 3)) << 1;
     }
-    
-    return 0;
 }

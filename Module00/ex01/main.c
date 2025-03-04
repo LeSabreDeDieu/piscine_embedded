@@ -6,7 +6,7 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 12:49:04 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/03 16:49:00 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/04 09:48:08 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,4 @@ int main(void) {
     // le PORTX permet de definir l'etat de la sortie (allume, eteint (1 ou 0)) d'un secteur (ici B).
     // ici, on selectionne la LED PB0 (car c'est aussi la premiere en commancant par 0) et on lui dis de s'allumer (1).
     PORTB |= (1 << PB0);
-    return 0;
 }

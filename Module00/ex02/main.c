@@ -6,13 +6,14 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 12:49:04 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/03 16:54:10 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/04 09:48:09 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <avr/io.h>
 
 int main(void) {
+    //Voir exercice 1 pour l'explication
     DDRB |= (1 << PB0);
     PORTB &= ~(1 << PB0);
 
@@ -31,5 +32,4 @@ int main(void) {
             PORTB &= ~(1 << PB0);
         }
     }
-    return 0;
 }
