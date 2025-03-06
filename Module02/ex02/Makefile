@@ -6,7 +6,7 @@
 #    By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 10:04:44 by sgabsi            #+#    #+#              #
-#    Updated: 2025/03/05 11:05:36 by sgabsi           ###   ########.fr        #
+#    Updated: 2025/03/06 13:54:21 by sgabsi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,7 @@ CC = avr-gcc
 COBJ = avr-objcopy
 DUDE = avrdude
 
-CFLAGS = -Wall -Wextra -Werror -Wshadow -O2
+CFLAGS = -Wall -Wextra -Werror -Wshadow -Os
 OPTIONS = -DF_CPU=$(F_CPU) -mmcu=$(MCU)
 
 # Progress bar

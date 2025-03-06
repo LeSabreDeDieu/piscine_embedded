@@ -6,7 +6,7 @@
 #    By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 10:04:44 by sgabsi            #+#    #+#              #
-#    Updated: 2025/03/06 13:53:42 by sgabsi           ###   ########.fr        #
+#    Updated: 2025/03/06 13:54:46 by sgabsi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -94,5 +94,8 @@ clean:
 	@rm -rf $(HEX_NAME)
 
 re: clean all
+
+screen:
+	@screen /dev/ttyUSB0 115200
 
 .PHONY: all hex flash clean re

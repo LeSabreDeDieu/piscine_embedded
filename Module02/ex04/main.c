@@ -6,7 +6,7 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:03:42 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/06 11:10:37 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/06 13:20:06 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 #define BAUD 115200UL
 #define MYUBBR ((float)(F_CPU) / (16UL * BAUD)) - 1
 #define USERNAME "sgabsi"
-#define PASSWORD "PaSsWoRd"
+#define PASSWORD "1234"
+#define MBMAXCHAR 255
 
 void uart_init ( unsigned int ubrr ) {
 	UBRR0H = (unsigned char)(ubrr>>8);
@@ -58,11 +59,15 @@ void uart_printstr(const char* str) {
 	}
 }
 
+uint8_t	is_printable_spe( char c ) {
+	return ((c >= 32 && c <= 126) || c == 27 || c == '\r' || c == '\b' || c == 127 );
+}
+
 int main(void) {
 	int i;
 	char c;
-	char username[16];
-	char password[16];
+	char username[MBMAXCHAR];
+	char password[MBMAXCHAR];
 
 	uart_init(round_ubbr());
 
@@ -75,20 +80,22 @@ int main(void) {
 		i = 0;
 		c = 0;
 		uart_printstr("username: ");
-		while (c != '\n' && i < 15) {
+		while (1) {
 			c = uart_rx();
-			if (c == '\r') break;
-			else if ((c == '\b' || c == 127) && i > 0) { 
-				uart_printstr("\b \b");
-				i--;
-				continue;
+			if (is_printable_spe(c)) {
+				if (c == '\r') break;
+				else if ((c == '\b' || c == 127)) {
+					if (i > 0) {
+						uart_printstr("\b \b");
+						i--;
+					}
+					continue;
+				}
+				else if (c == 27) { break; }
+				uart_tx(c);
+				if (i <= MBMAXCHAR - 1)
+					username[i++] = c;
 			}
-			else if ((c == '\b' || c == 127)) {
-				continue;
-			}
-			else if (c == 27) { break; }
-			uart_tx(c);
-			username[i++] = c;
 		}
 		username[i] = '\0';
 
@@ -98,20 +105,22 @@ int main(void) {
 		i = 0;
 		c = 0;
 		uart_printstr("\n\r\tpassword: ");
-		while (c != '\n' && i < 15) {
+		while (1) {
 			c = uart_rx();
-			if (c == '\r') break;
-			else if ((c == '\b' || c == 127) && i > 0) { 
-				uart_printstr("\b \b");
-				i--;
-				continue;
+			if (is_printable_spe(c)) {
+				if (c == '\r') break;
+				else if ((c == '\b' || c == 127)) {
+					if (i > 0) {
+						uart_printstr("\b \b");
+						i--;
+					}
+					continue;
+				}
+				else if (c == 27) { break; }
+				uart_tx('*');
+				if (i <= MBMAXCHAR - 1)
+					password[i++] = c;
 			}
-			else if ((c == '\b' || c == 127)) {
-				continue;
-			}
-			else if (c == 27) { break; }
-			uart_tx('*');
-			password[i++] = c;
 		}
 
 		if (c == 27) { break; }
@@ -137,13 +146,16 @@ int main(void) {
 		uart_printstr("Hello ");
 		uart_printstr(USERNAME);
 		uart_printstr("!\n\rShall we play a game?\n\r");
+		while (1) {
+			PORTB |= (1 << PB0) | (1 << PB1) | (1 << PB2) | (1 << PB4);
+			_delay_ms(1000);
+			PORTB &= ~((1 << PB0) | (1 << PB1) | (1 << PB2) | (1 << PB4));
+			_delay_ms(1000);
+		};
+	} else {
+		uart_printstr("\n\rProgram Terminated !\n\r");
+		while(1);
 	}
 
-	while (1) {
-		PORTB |= (1 << PB0) | (1 << PB1) | (1 << PB2) | (1 << PB4);
-		_delay_ms(1000);
-		PORTB &= ~((1 << PB0) | (1 << PB1) | (1 << PB2) | (1 << PB4));
-		_delay_ms(1000);
-	};
 }
 
