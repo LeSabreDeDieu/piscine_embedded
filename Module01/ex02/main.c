@@ -6,7 +6,7 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:03:42 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/04 17:01:01 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/05 12:44:48 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void timer1_init() {
 
 	DDRB |= (1 << DDB1);					// Activation mode ecriture de la LED
 
-	// Activation du fast Mode
+	// Activation du fast PWM Mode
 	TCCR1A |= (1 << WGM11); 
 	TCCR1B |= (1 << WGM12) | (1 << WGM13);
 
