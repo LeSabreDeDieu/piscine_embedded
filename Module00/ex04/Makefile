@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+         #
+#    By: sayfallahgabsi <sayfallahgabsi@student.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 10:04:44 by sgabsi            #+#    #+#              #
-#    Updated: 2025/03/06 13:53:33 by sgabsi           ###   ########.fr        #
+#    Updated: 2025/03/07 11:05:30 by sayfallahga      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,11 @@
 
 MCU = atmega328p
 F_CPU = 16000000UL
-PORT = /dev/ttyUSB0
+ifeq ($(shell uname -s), Darwin)
+    PORT = /dev/cu.usbserial-110
+else
+    PORT = /dev/ttyUSB0
+endif
 BAUD = 115200
 
 # Dossiers
@@ -40,8 +44,8 @@ CC = avr-gcc
 COBJ = avr-objcopy
 DUDE = avrdude
 
-CFLAGS = -Wall -Wextra -Werror -Wshadow -Os
-OPTIONS = -DF_CPU=$(F_CPU) -mmcu=$(MCU)
+CFLAGS = -Wall -Wextra -Werror -Wshadow
+OPTIONS = -DF_CPU=$(F_CPU) -mmcu=$(MCU) -Os
 
 # Progress bar
 COUNT						=	1

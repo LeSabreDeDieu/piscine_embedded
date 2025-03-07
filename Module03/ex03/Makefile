@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+         #
+#    By: sayfallahgabsi <sayfallahgabsi@student.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 10:04:44 by sgabsi            #+#    #+#              #
-#    Updated: 2025/03/06 13:54:46 by sgabsi           ###   ########.fr        #
+#    Updated: 2025/03/07 13:06:17 by sayfallahga      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,11 +16,16 @@
 
 MCU = atmega328p
 F_CPU = 16000000UL
-PORT = /dev/ttyUSB0
+ifeq ($(shell uname -s), Darwin)
+    PORT = /dev/cu.usbserial-110
+else
+    PORT = /dev/ttyUSB0
+endif
 BAUD = 115200
 
 # Dossiers
-SRCDIR = .
+INCDIR = ./include
+SRCDIR = ./src
 OBJDIR = obj
 BINDIR = bin
 
@@ -29,7 +34,10 @@ BIN_NAME = $(BINDIR)/main.bin
 HEX_NAME = main.hex
 
 # Liste des fichiers sources
-SRC_FILES = main.c
+SRC_FILES = main.c	\
+			color.c	\
+			uart.c	\
+			utils.c
 SRC = $(addprefix $(SRCDIR)/, $(SRC_FILES))
 
 # Liste des fichiers objets
@@ -40,8 +48,8 @@ CC = avr-gcc
 COBJ = avr-objcopy
 DUDE = avrdude
 
-CFLAGS = -Wall -Wextra -Werror -Wshadow -Os
-OPTIONS = -DF_CPU=$(F_CPU) -mmcu=$(MCU)
+CFLAGS = -Wall -Wextra -Werror -Wshadow
+OPTIONS = -I $(INCDIR) -DF_CPU=$(F_CPU) -mmcu=$(MCU) -Os
 
 # Progress bar
 COUNT						=	1
@@ -94,8 +102,5 @@ clean:
 	@rm -rf $(HEX_NAME)
 
 re: clean all
-
-screen:
-	@screen /dev/ttyUSB0 115200
 
 .PHONY: all hex flash clean re

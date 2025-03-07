@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sayfallahgabsi <sayfallahgabsi@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:03:42 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/05 13:56:25 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/07 11:29:42 by sayfallahga      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,21 +50,8 @@ void uart_printstr(const char* str) {
 	}
 }
 
-void timer1_init() {
-    TCCR1B |= (1 << WGM12);  				// Mode CTC (Clear Timer on Compare Match)
-    TCCR1B |= (1 << CS12) | (1 << CS10);	// Prescaler 1024
-    OCR1A = 31249;           				// 2 secondes
-    TIMSK1 |= (1 << OCIE1A); 				// Activer l'interruption sur OCR1A
-    sei();                   				// Activer les interruptions globales
-}
-
-ISR(TIMER1_COMPA_vect) {
-	uart_printstr("Hello World!\n\r");
-}
-
 int main( void ) {
 	uart_init(round_ubbr());
-	// timer1_init();
 
 	while (1) {
 		uart_tx(uart_rx());

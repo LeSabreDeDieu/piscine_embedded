@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sayfallahgabsi <sayfallahgabsi@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:03:42 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/06 13:20:06 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/07 11:40:09 by sayfallahga      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <avr/interrupt.h>
 
 #define BAUD 115200UL
-#define MYUBBR ((float)(F_CPU) / (16UL * BAUD)) - 1
+#define MYUBBR (((float)(F_CPU) / (16UL * BAUD)) + 0.5)
 #define USERNAME "sgabsi"
 #define PASSWORD "1234"
 #define MBMAXCHAR 255
@@ -38,13 +38,6 @@ char uart_rx(void) {
 	return UDR0;
 }
 
-unsigned int round_ubbr() {
-    if (MYUBBR >= 0)
-        return (unsigned int)(MYUBBR + 0.5f);
-    else
-        return (unsigned int)(MYUBBR - 0.5f);
-}
-
 int strcmp(const char *s1, const char *s2) {
 	int i = 0;
 	while (s1[i] && s1[i] == s2[i]) { i++; }
@@ -53,10 +46,7 @@ int strcmp(const char *s1, const char *s2) {
 
 void uart_printstr(const char* str) {
 	const char *tmp = str;
-	while (*tmp) {
-		uart_tx(*tmp);
-		tmp++;
-	}
+	while (*tmp++) uart_tx(*tmp);
 }
 
 uint8_t	is_printable_spe( char c ) {
@@ -69,7 +59,7 @@ int main(void) {
 	char username[MBMAXCHAR];
 	char password[MBMAXCHAR];
 
-	uart_init(round_ubbr());
+	uart_init(MYUBBR);
 
 	DDRB |= (1 << DDB0) | (1 << DDB1) | (1 << DDB2) | (1 << DDB4);
 

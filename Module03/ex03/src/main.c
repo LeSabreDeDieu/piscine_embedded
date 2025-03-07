@@ -6,41 +6,26 @@
 /*   By: sayfallahgabsi <sayfallahgabsi@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:03:42 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/07 11:15:42 by sayfallahga      ###   ########.fr       */
+/*   Updated: 2025/03/07 13:04:52 by sayfallahga      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <avr/io.h>
-#include <util/delay.h>
-#include <avr/interrupt.h>
+#include "main.h"
 
-#define BAUD 115200UL
-#define MYUBBR ((float)(F_CPU) / (16UL * BAUD)) - 1
+#define LOOP while (1);
 
-void uart_init ( unsigned int ubrr ) {
-	UBRR0H = (unsigned char)(ubrr>>8);
-	UBRR0L = (unsigned char)ubrr;
-	UCSR0B |= (1<<TXEN0);
-	UCSR0C |= (1<<UCSZ00) | (1<<UCSZ01);
+void ready( void ) {
+	DDRB |= ((1<<PB0) | (1<<PB1) | (1<<PB2) | (1<<PB4));
+	PORTB ^= ((1<<PB0) | (1<<PB1) | (1<<PB2) | (1<<PB4));
+	_delay_ms(1000);
+	PORTB ^= ((1<<PB0) | (1<<PB1) | (1<<PB2) | (1<<PB4));
 }
 
-void uart_tx ( char data ) {
-	while ( !(UCSR0A & (1<<UDRE0)) );
-	UDR0 = data;
-}
-
-unsigned int round_ubbr() {
-    if (MYUBBR >= 0)
-        return (unsigned int)(MYUBBR + 0.5f);
-    else
-        return (unsigned int)(MYUBBR - 0.5f);
-}
-
-int main( void ) {
+int main(void) {
+	pwm_init();
 	uart_init(round_ubbr());
-
-	while (1) {
-		uart_tx('Z');
-		_delay_ms(1000);
-	}
+	ready();
+	sei();
+	
+	LOOP;
 }
