@@ -3,19 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sayfallahgabsi <sayfallahgabsi@student.    +#+  +:+       +#+        */
+/*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:20:03 by sayfallahga       #+#    #+#             */
-/*   Updated: 2025/03/07 15:04:06 by sayfallahga      ###   ########.fr       */
+/*   Updated: 2025/03/10 13:00:25 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <avr/io.h>
-#include <avr/delay.h>
+#include <util/delay.h>
 #include <avr/interrupt.h>
 
+volatile uint8_t switch_flag = 0; 
+
 ISR(INT0_vect) {
-    PORTB ^= (1 << PB0);
+    switch_flag = 1;
 }
 
 int main() {
@@ -31,5 +33,11 @@ int main() {
 
     sei();
 
-    while (1);
+    while (1) {
+        if (switch_flag) {
+            PORTB ^= (1 << PB0);
+            _delay_ms(150);
+            switch_flag = 0;
+        }
+    };
 }

@@ -5,41 +5,21 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/07 12:58:26 by sayfallahga       #+#    #+#             */
-/*   Updated: 2025/03/08 14:05:07 by sgabsi           ###   ########.fr       */
+/*   Created: 2025/03/07 15:34:17 by sayfallahga       #+#    #+#             */
+/*   Updated: 2025/03/10 12:21:51 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-int is_print_spe(char c) { return (c >= 32 && c <= 126) || c == '\n' || c == '\r' || c == 127; }
-int is_alpha(char c) { return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')); }
-int is_lowercase(char c) { return c >= 'a' && c <= 'z'; }
-
-int is_in_tab(char c, char *tab) {
-	while (*tab) {
-		if (c == *tab) return 1;
-		tab++;
-	}
-	return 0;
-}
-
-int is_all_hex(char *str) {
-	char *char_auth = "0123456789ABCDEFabcdef";
-	for (int i = 1; str[i]; i++) {  
-		if (!is_in_tab(str[i], char_auth)) return 0;
-	}
-	return 1;
-}
-
-int hex2int(char ch) {
-    if (ch >= '0' && ch <= '9')
-        return ch - '0';
-    if (ch >= 'A' && ch <= 'F')
-        return ch - 'A' + 10;
-    if (ch >= 'a' && ch <= 'f')
-        return ch - 'a' + 10;
-    return -1;
+void print_hex(uint8_t value) {
+    char hex_str[5];  // Format "0xff\0"
+    hex_str[0] = '0';
+    hex_str[1] = 'x';
+    hex_str[2] = "0123456789abcdef"[value >> 4];  // Partie haute
+    hex_str[3] = "0123456789abcdef"[value & 0x0F];  // Partie basse
+    hex_str[4] = '\0';  // Fin de chaîne
+    uart_printstr(hex_str);
 }
 
 unsigned int round_ubbr() {

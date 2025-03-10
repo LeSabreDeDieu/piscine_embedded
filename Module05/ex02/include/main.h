@@ -1,32 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/03 10:03:42 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/08 14:02:00 by sgabsi           ###   ########.fr       */
+/*   Created: 2025/03/07 15:35:25 by sayfallahga       #+#    #+#             */
+/*   Updated: 2025/03/10 12:53:40 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "main.h"
+#ifndef MAIN_H
+#define MAIN_H
 
-#define LOOP while (1);
+#define BAUD 115200UL
+#define MYUBBR ((float)(F_CPU) / (16UL * BAUD)) - 1
 
-void ready( void ) {
-	DDRB |= ((1<<PB0) | (1<<PB1) | (1<<PB2) | (1<<PB4));
-	PORTB ^= ((1<<PB0) | (1<<PB1) | (1<<PB2) | (1<<PB4));
-	_delay_ms(1000);
-	PORTB ^= ((1<<PB0) | (1<<PB1) | (1<<PB2) | (1<<PB4));
-}
+#include <avr/io.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
 
-int main(void) {
-	pwm_init();
-	uart_init(round_ubbr());
-	ready();
-	uart_printstr("Enter a color with this patern : #RRGGBB :\n\r#");
-	sei();
-	
-	LOOP;
-}
+unsigned int round_ubbr();
+void print_hex(uint8_t value);
+char* uint16toa(uint16_t value);
+void uart_init(unsigned int ubrr);
+void uart_printstr(const char* str);
+
+#endif // !MAIN_H

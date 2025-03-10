@@ -1,7 +1,7 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:     #
+#    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: sayfallahgabsi <sayfallahgabsi@student.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
@@ -24,8 +24,7 @@ endif
 BAUD = 115200
 
 # Dossiers
-INCDIR = ./include
-SRCDIR = ./src
+SRCDIR = .
 OBJDIR = obj
 BINDIR = bin
 
@@ -34,9 +33,7 @@ BIN_NAME = $(BINDIR)/main.bin
 HEX_NAME = main.hex
 
 # Liste des fichiers sources
-SRC_FILES = main.c \
-			uart.c \
-			utils.c
+SRC_FILES = main.c
 SRC = $(addprefix $(SRCDIR)/, $(SRC_FILES))
 
 # Liste des fichiers objets
@@ -48,7 +45,7 @@ COBJ = avr-objcopy
 DUDE = avrdude
 
 CFLAGS = -Wall -Wextra -Werror -Wshadow
-OPTIONS = -I $(INCDIR) -DF_CPU=$(F_CPU) -mmcu=$(MCU) -Os
+OPTIONS = -DF_CPU=$(F_CPU) -mmcu=$(MCU) -Os
 
 # Progress bar
 COUNT						=	1
@@ -101,8 +98,5 @@ clean:
 	@rm -rf $(HEX_NAME)
 
 re: clean all
-
-screen:
-	screen $(PORT) $(BAUD)
 
 .PHONY: all hex flash clean re

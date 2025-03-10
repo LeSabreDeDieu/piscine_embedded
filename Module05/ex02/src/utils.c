@@ -5,41 +5,25 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/07 12:58:26 by sayfallahga       #+#    #+#             */
-/*   Updated: 2025/03/08 14:05:07 by sgabsi           ###   ########.fr       */
+/*   Created: 2025/03/07 15:34:17 by sayfallahga       #+#    #+#             */
+/*   Updated: 2025/03/10 14:49:59 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-int is_print_spe(char c) { return (c >= 32 && c <= 126) || c == '\n' || c == '\r' || c == 127; }
-int is_alpha(char c) { return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')); }
-int is_lowercase(char c) { return c >= 'a' && c <= 'z'; }
+char* uint16toa(uint16_t value) {
+    static char str[6];  // Maximum length for uint16_t (65535) + null terminator
+    char *ptr = str + sizeof(str) - 1;
+    *ptr = '\0';
 
-int is_in_tab(char c, char *tab) {
-	while (*tab) {
-		if (c == *tab) return 1;
-		tab++;
-	}
-	return 0;
-}
+    // Convert integer to string
+    do {
+        *--ptr = (value % 10) + '0';
+        value /= 10;
+    } while (value);
 
-int is_all_hex(char *str) {
-	char *char_auth = "0123456789ABCDEFabcdef";
-	for (int i = 1; str[i]; i++) {  
-		if (!is_in_tab(str[i], char_auth)) return 0;
-	}
-	return 1;
-}
-
-int hex2int(char ch) {
-    if (ch >= '0' && ch <= '9')
-        return ch - '0';
-    if (ch >= 'A' && ch <= 'F')
-        return ch - 'A' + 10;
-    if (ch >= 'a' && ch <= 'f')
-        return ch - 'a' + 10;
-    return -1;
+    return ptr;
 }
 
 unsigned int round_ubbr() {

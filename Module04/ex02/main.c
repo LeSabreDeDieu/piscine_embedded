@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sayfallahgabsi <sayfallahgabsi@student.    +#+  +:+       +#+        */
+/*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:20:03 by sayfallahga       #+#    #+#             */
-/*   Updated: 2025/03/07 15:08:32 by sayfallahga      ###   ########.fr       */
+/*   Updated: 2025/03/08 10:58:35 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int main() {
 	// init the register mask PCMSK2 to PCINT20 (it's the pin that communicate with the switch 2)
 	PCMSK2 |= (1 << PCINT20);
 
-    sei();
+    SREG |= (1 << SREG_I);
 
     while (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sayfallahgabsi <sayfallahgabsi@student.    +#+  +:+       +#+        */
+/*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:20:03 by sayfallahga       #+#    #+#             */
-/*   Updated: 2025/03/07 15:06:30 by sayfallahga      ###   ########.fr       */
+/*   Updated: 2025/03/10 13:04:31 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 #include <avr/interrupt.h>
 
 #define LOOP while(1);
+#define DELAY 2
 
 volatile uint8_t direction = 1;
 volatile uint8_t duty_cycle = 0;
+volatile uint8_t delay_cycle = 0;
 
 void init_TIMER0( void ) {
 	// init Timer0 to CTC mode and set the prescaler to 64
@@ -34,20 +36,25 @@ void init_TIMER1( void ) {
 	TCCR1A |= (1 << WGM11) | (1 << COM1A1); 
 	TCCR1B |= (1 << WGM12) | (1 << WGM13) | (1 << CS10);
 
-	ICR1 	= (F_CPU / 100) - 1;
+	ICR1 	= (int)(F_CPU / 100) - 1;
 	
 	OCR1A 	= 0;
 }
 
 ISR (TIMER0_COMPA_vect) {
-	if (direction) {
-        duty_cycle++;
-        if (duty_cycle >= 255) direction = 0;
-    } else {
-        duty_cycle--;
-        if (duty_cycle == 0) direction = 1;
-    }
-    OCR1A = ((uint32_t)ICR1 * duty_cycle) / 255;
+	delay_cycle++;
+	if (delay_cycle >= DELAY)
+	{
+		delay_cycle = 0;
+		if (direction) {
+			duty_cycle++;
+			if (duty_cycle >= 255) direction = 0;
+		} else {
+			duty_cycle--;
+			if (duty_cycle == 0) direction = 1;
+		}
+		OCR1A = ((uint32_t)ICR1 * duty_cycle) / 255;
+	}
 }
 
 int main( void ) {

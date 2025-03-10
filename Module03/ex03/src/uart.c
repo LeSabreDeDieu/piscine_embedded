@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   uart.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sayfallahgabsi <sayfallahgabsi@student.    +#+  +:+       +#+        */
+/*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:00:39 by sayfallahga       #+#    #+#             */
-/*   Updated: 2025/03/07 13:00:54 by sayfallahga      ###   ########.fr       */
+/*   Updated: 2025/03/08 14:10:26 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,37 +36,45 @@ void uart_printstr(const char* str) {
 
 ISR(USART_RX_vect) {
 	char c;
-	char RGB[8] = {0};
+	char RGB[7] = {0};
 	uint8_t i = 0;
 	
-	while (i < 7) {
+	while (1) {
 		c = uart_rx();
-		uart_tx(c);
-		
-		if (c == '\b' || c == 127) { 
-			if (i > 0) {
-				uart_printstr("\b \b"); 
-				i--; 
+		if (is_print_spe(c)) {
+			if (c == '\b' || c == 127) { 
+				if (i > 0) {
+					uart_printstr("\b \b"); 
+					i--; 
+				}
+				continue; 
 			}
-			continue; 
+			else if (c == '\r' || c == '\n') { uart_printstr("\n\r"); break; }
+			uart_tx(c);
+			if (i < 6)
+			{
+				RGB[i] = c;
+				i++;
+			}
 		}
-		
-		RGB[i] = c;
-		i++;
 	}
 	RGB[i] = 0;
 	
-	if (RGB[0] != '#' || !is_all_hex(RGB)) {
-		uart_printstr("\n\rInvalid color format! Use #RRGGBB\n\r");
+	if (!is_all_hex(RGB)) {
+		uart_printstr("\n\rInvalid color format! Use #RRGGBB\n\r#");
 		return;
 	}
+
+	uint8_t red   = 16 * hex2int(RGB[0]) + hex2int(RGB[1]);
+	uint8_t green = 16 * hex2int(RGB[2]) + hex2int(RGB[3]);
+	uint8_t blue  = 16 * hex2int(RGB[4]) + hex2int(RGB[5]);
 	
-	int red   = 16 * hex2int(RGB[1]) + hex2int(RGB[2]);
-	int green = 16 * hex2int(RGB[3]) + hex2int(RGB[4]);
-	int blue  = 16 * hex2int(RGB[5]) + hex2int(RGB[6]);
-	
+	uart_printstr("Color set to : ");
+	uart_printstr(RGB);
+	uart_printstr("\n\r");
+
 	SET_RGB_LED;
 	set_rgb(red, green, blue);
 	_delay_ms(1000);
-	uart_printstr("\n\r");
+	uart_printstr("\n\rEnter a color with this patern : #RRGGBB :\n\r#");
 }

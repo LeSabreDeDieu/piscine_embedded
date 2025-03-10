@@ -5,18 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/07 12:59:04 by sayfallahga       #+#    #+#             */
-/*   Updated: 2025/03/08 14:05:24 by sgabsi           ###   ########.fr       */
+/*   Created: 2025/03/07 15:35:25 by sayfallahga       #+#    #+#             */
+/*   Updated: 2025/03/10 14:12:18 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 #define MAIN_H
-
-#define R 	(1 << PD5)
-#define G 	(1 << PD6)
-#define B	(1 << PD3)
-#define SET_RGB_LED (DDRD |= R | G | B)
 
 #define BAUD 115200UL
 #define MYUBBR ((float)(F_CPU) / (16UL * BAUD)) - 1
@@ -25,17 +20,11 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-void pwm_init(void);
+unsigned int round_ubbr();
+void print_hex(uint8_t value);
+char* uint32toa(uint32_t value);
 void uart_init(unsigned int ubrr);
 void uart_printstr(const char* str);
-void set_rgb(uint8_t r, uint8_t g, uint8_t b);
-
-// UTILS
-int is_alpha(char c);
-int is_lowercase(char c);
-int is_print_spe(char c);
-int is_all_hex(char *str);
-int hex2int(char ch);
-unsigned int round_ubbr();
+uint16_t convert_to_celsius(uint16_t adc_value);
 
 #endif // !MAIN_H
