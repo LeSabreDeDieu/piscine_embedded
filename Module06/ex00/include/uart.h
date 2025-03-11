@@ -1,0 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   uart.h                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/11 10:52:06 by sgabsi            #+#    #+#             */
+/*   Updated: 2025/03/11 16:29:53 by sgabsi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef UART_H
+#define UART_H
+
+#include <avr/io.h>
+
+#define BAUD 115200UL
+#define MYUBBR (((float)(F_CPU) / (16UL * BAUD)) - 0.5)
+
+void uart_init( void );
+void uart_tx( char data );
+void print_hex( uint8_t value );
+void uart_printstr( const char* str );
+
+#endif // !UART_H

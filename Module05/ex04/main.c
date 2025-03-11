@@ -6,7 +6,7 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 14:52:34 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/10 15:30:57 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/11 11:46:27 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,11 @@ ISR(ADC_vect) {
 int main(void) {
 	init_rgb();
 	init_ADC();
-	sei();
-	ADC_read(0);
 
 	DDRB |= (1 << DDB0) | (1 << DDB1) | (1 << DDB2) | (1 << DDB4);
+	
+	sei();
+	ADC_read(0);
 	
 	while (1);
 }
