@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sayfallahgabsi <sayfallahgabsi@student.    +#+  +:+       +#+         #
+#    By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 10:04:44 by sgabsi            #+#    #+#              #
-#    Updated: 2025/03/07 11:05:30 by sayfallahga      ###   ########.fr        #
+#    Updated: 2025/03/12 08:48:54 by sgabsi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,14 +67,13 @@ all: hex flash
 hex: $(HEX_NAME)
 
 $(HEX_NAME): $(BIN_NAME)
-	@echo "\033[0;32mGenerating main.hex from main.bin...\033[0m"
+	@echo "$(GREEN)Generating main.hex from main.bin...$(NC)"
 	@$(COBJ) -O ihex $< $@
 
 $(BIN_NAME): $(OBJ)
 	@mkdir -p $(BINDIR)
-	@echo "\033[0;32mLinking all object files into main.bin...\033[0m"
+	@echo "$(GREEN)Linking all object files into main.bin...$(NC)"
 	@$(CC) $(CFLAGS) $(OPTIONS) -o $@ $^
-	@rm -fr $(OBJDIR)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(OBJDIR)
@@ -89,11 +88,11 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@printf "\n"
 
 flash: $(HEX_NAME)
-	@echo "\033[0;33mFlashing $(HEX_NAME) to microcontroller...\033[0m"
+	@echo "$(YELLOW)Flashing $(HEX_NAME) to microcontroller...$(NC)"
 	@$(DUDE) -p $(MCU) -P $(PORT) -c arduino -b $(BAUD) -U flash:w:$(HEX_NAME)
 
 clean:
-	@echo "\033[0;31mCleaning up...\033[0m"
+	@echo "$(RED)Cleaning up...$(NC)"
 	@rm -rf $(BINDIR)
 	@rm -rf $(HEX_NAME)
 

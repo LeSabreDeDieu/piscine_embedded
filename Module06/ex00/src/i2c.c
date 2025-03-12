@@ -6,7 +6,7 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:00:17 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/11 12:16:42 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/12 09:54:42 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 
 void i2c_init(void) {
 	TWSR = 0;            										// Set prescaler to 1
-	TWBR = ((F_CPU / SCL) - 16) / (2 * (1 << (TWSR & 0x03)));	// Set the TW
-	TWCR = (1 << TWEN);  										// Enable TWI
+	TWBR = ((F_CPU / SCL) - 16) / (2 * (1 << (TWSR & 0x03)));	// Set the TWBR
+	TWCR = (1 << TWEN);  										// Enable I2C
 }
 
 void i2c_write(uint8_t byte) {

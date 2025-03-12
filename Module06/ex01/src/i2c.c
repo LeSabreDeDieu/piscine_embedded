@@ -6,7 +6,7 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 11:00:17 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/11 13:51:38 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/12 09:59:56 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 
 void i2c_init ( void ) {
 	TWSR = 0;            										// Set prescaler to 1
-	TWBR = ((F_CPU / SCL) - 16) / (2 * (1 << (TWSR & 0x03)));	// Set the TW
-	TWCR = (1 << TWEN);  										// Enable TWI
+	TWBR = ((F_CPU / SCL) - 16) / (2 * (1 << (TWSR & 0x03)));	// Set the TWBR
+	TWCR = (1 << TWEN);  										// Enable I2C
 }
 
 void i2c_write ( uint8_t byte ) {
@@ -27,9 +27,9 @@ void i2c_write ( uint8_t byte ) {
 }
 
 uint8_t i2c_read ( void ) {
-	TWCR = (1 << TWEN) | (1 << TWINT) | (1 << TWEA); 			// Lire avec ACK
-	while (!(TWCR & (1 << TWINT)));					
-	return TWDR; 									
+	TWCR = (1 << TWEN) | (1 << TWINT) | (1 << TWEA);			// Enable I2C and clear the interrupt flag to start reception of data
+	while (!(TWCR & (1 << TWINT)));								// Wait for the reception to complete
+	return TWDR; 												// Return the received data from TWDR
 }
 
 void i2c_start ( uint8_t address ) {

@@ -24,7 +24,8 @@ endif
 BAUD = 115200
 
 # Dossiers
-SRCDIR = .
+INCDIR = ./include
+SRCDIR = ./src
 OBJDIR = obj
 BINDIR = bin
 
@@ -33,7 +34,8 @@ BIN_NAME = $(BINDIR)/main.bin
 HEX_NAME = main.hex
 
 # Liste des fichiers sources
-SRC_FILES = main.c
+SRC_FILES = main.c	\
+			uart.c
 SRC = $(addprefix $(SRCDIR)/, $(SRC_FILES))
 
 # Liste des fichiers objets
@@ -45,7 +47,7 @@ COBJ = avr-objcopy
 DUDE = avrdude
 
 CFLAGS = -Wall -Wextra -Werror -Wshadow
-OPTIONS = -DF_CPU=$(F_CPU) -mmcu=$(MCU) -Os
+OPTIONS = -I $(INCDIR) -DF_CPU=$(F_CPU) -mmcu=$(MCU) -Os
 
 # Progress bar
 COUNT						=	1
@@ -75,7 +77,6 @@ $(BIN_NAME): $(OBJ)
 	@echo "$(GREEN)Linking all object files into main.bin...$(NC)"
 	@$(CC) $(CFLAGS) $(OPTIONS) -o $@ $^
 
-
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(OBJDIR)
 	@$(CC) $(CFLAGS) $(OPTIONS) -c $< -o $@
@@ -98,5 +99,8 @@ clean:
 	@rm -rf $(HEX_NAME)
 
 re: clean all
+
+screen: hex flash
+	screen $(PORT) $(BAUD)
 
 .PHONY: all hex flash clean re

@@ -3,6 +3,11 @@
 		"interrupt.h": "c",
 		"main.h": "c",
 		"stdint.h": "c",
-		"stdint-gcc.h": "c"
+		"stdint-gcc.h": "c",
+		"io.h": "c",
+		"delay.h": "c",
+		"i2c.h": "c",
+		"uart.h": "c",
+		"eeprom.h": "c"
 	}
 }
