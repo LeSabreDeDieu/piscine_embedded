@@ -6,7 +6,7 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:00:39 by sayfallahga       #+#    #+#             */
-/*   Updated: 2025/03/13 10:25:36 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/13 12:27:44 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void uart_init_w ( void ) {
 
 void uart_init_rw ( void ) {
     uart_init();
-	UCSR0B |= (1 << TXEN0) | (1 << RXEN0) | (1 << RXCIE0);
+	UCSR0B |= (1 << TXEN0) | (1 << RXEN0);
     SREG |= (1 << SREG_I);
 }
 
@@ -81,9 +81,9 @@ void print_float ( const float value ) {
 }
 
 void print_hexa ( const unsigned int value, uint8_t uppercase ) {
-    char *buffer = "";
-    if (uppercase) sprintf(buffer, "%X", value);
-    else sprintf(buffer, "%x", value);
+    char buffer[1024] = {0};
+    if (uppercase) sprintf(buffer, "%02X", value);
+    else sprintf(buffer, "%02x", value);
     uart_printstr(buffer);
 }
 
@@ -103,8 +103,8 @@ void println_float ( const float value ) {
 }
 
 void println_hexa ( const unsigned int value, uint8_t uppercase ) {
-    char *buffer = "";
-    if (uppercase) sprintf(buffer, "%X", value);
-    else sprintf(buffer, "%x", value);
+    char buffer[1024] = {0};
+    if (uppercase) sprintf(buffer, "%02X", value);
+    else sprintf(buffer, "%02x", value);
     uart_printstr(buffer);
 }

@@ -6,54 +6,105 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:00:39 by sayfallahga       #+#    #+#             */
-/*   Updated: 2025/03/12 08:53:23 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/13 10:58:41 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "uart.h"
+#include <stdio.h>
 
-void uart_tx(char data) {
-	while (!(UCSR0A & (1 << UDRE0)));
-	UDR0 = data;
+void uart_init ( void ) {
+    UBRR0H = (unsigned char)((int)MYUBBR >> 8);
+    UBRR0L = (unsigned char) MYUBBR;
+    UCSR0C |= (1 << UCSZ00) | (1 << UCSZ01);
 }
 
-void uart_init( void ) {
-	UBRR0H = (unsigned char)((int)MYUBBR >> 8);
-	UBRR0L = (unsigned char) MYUBBR;
-	
+void uart_init_r ( void ) {
+    uart_init();
+	UCSR0B |= (1 << RXEN0) | (1 << RXCIE0);
+    SREG |= (1 << SREG_I);
+}
+
+void uart_init_w ( void ) {
+    uart_init();
 	UCSR0B |= (1 << TXEN0);
-	UCSR0C |= (1 << UCSZ00) | (1 << UCSZ01);
 }
 
-void uart_printstr(const char* str) {
+void uart_init_rw ( void ) {
+    uart_init();
+	UCSR0B |= (1 << TXEN0) | (1 << RXEN0) | (1 << RXCIE0);
+    SREG |= (1 << SREG_I);
+}
+
+char uart_rx ( void ) {
+	while ( !(UCSR0A & (1<<RXC0)) );
+	return UDR0;
+}
+
+char read_char ( void ) {
+    return (uart_rx());
+}
+
+void uart_tx ( const char data ) {
+    while (!(UCSR0A & (1 << UDRE0)));
+    UDR0 = data;
+}
+
+void uart_printchar ( const char c ) {
+    uart_tx(c);
+}
+
+void uart_printstr ( const char* str ) {
 	while (*str) uart_tx(*str++);
 }
 
-void print_hex(uint16_t value) {
-    char hex_str[5];  								// Format "FFFF\0"
-    hex_str[0] = "0123456789abcdef"[(value >> 12) & 0x0F];  // Partie haute-haute
-    hex_str[1] = "0123456789abcdef"[(value >> 8) & 0x0F];   // Partie haute-basse
-    hex_str[2] = "0123456789abcdef"[(value >> 4) & 0x0F];   // Partie basse-haute
-    hex_str[3] = "0123456789abcdef"[value & 0x0F];          // Partie basse-basse
-    hex_str[4] = '\0';  									// Fin de chaîne
-    uart_printstr(hex_str);
+void uart_println ( void ) {
+	uart_printstr("\n\r");
 }
 
-char* uint16toa(uint16_t value) {
-    static char str[6];  // Maximum length for uint16_t (65535) + null terminator
-    char *ptr = str + sizeof(str) - 1;
-    *ptr = '\0';
-
-    // Convert integer to string
-    do {
-        *--ptr = (value % 10) + '0';
-        value /= 10;
-    } while (value);
-
-    return ptr;
+void print_uint ( const uint32_t value ) {
+    char *buffer = "";
+    sprintf(buffer, "%lu", value);
+    uart_printstr(buffer);
 }
 
-void print_hex_value(char c) {
-	print_hex(c);
-	uart_printstr(" ");
+void print_int ( const int value ) {
+    char *buffer = "";
+    sprintf(buffer, "%d", value);
+    uart_printstr(buffer);
+}
+
+void print_float ( const float value ) {
+    char *buffer = "";
+    sprintf(buffer, "%f", value);
+    uart_printstr(buffer);
+}
+
+void print_hexa ( const unsigned int value, uint8_t uppercase ) {
+    char buffer[1024] = {0};
+    if (uppercase) sprintf(buffer, "%02X", value);
+    else sprintf(buffer, "%02x", value);
+    uart_printstr(buffer);
+}
+
+void println_uint ( const uint32_t value ) {
+    print_uint(value);
+    uart_printstr("\n\r");
+}
+
+void println_int ( const int value ) {
+    print_int(value);
+    uart_printstr("\n\r");
+}
+
+void println_float ( const float value ) {
+    print_float(value);
+    uart_printstr("\n\r");
+}
+
+void println_hexa ( const unsigned int value, uint8_t uppercase ) {
+    char buffer[1024] = {0};
+    if (uppercase) sprintf(buffer, "%02X", value);
+    else sprintf(buffer, "%02x", value);
+    uart_printstr(buffer);
 }

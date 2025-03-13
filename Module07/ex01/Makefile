@@ -35,7 +35,9 @@ HEX_NAME = main.hex
 
 # Liste des fichiers sources
 SRC_FILES = main.c	\
-			uart.c
+			uart.c	\
+			eeprom.c \
+			user_input.c
 SRC = $(addprefix $(SRCDIR)/, $(SRC_FILES))
 
 # Liste des fichiers objets

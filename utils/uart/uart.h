@@ -6,7 +6,7 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 10:52:06 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/13 10:05:50 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/13 10:26:22 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,15 @@ void uart_printchar ( const char c );
 void uart_printstr( const char* str );
 
 /**
+ * @brief Prints a newline character to the UART interface.
+ *
+ * This function sends a newline character ('\n') followed by a carriage return ('\r') to the UART interface,
+ * which is typically used to move the cursor to the beginning of the next line.
+ * It can be useful for formatting output in a terminal or serial console.
+ */
+void uart_println ( void );
+
+/**
  * @brief Prints an unsigned integer via the UART interface.
  *
  * This function converts an unsigned integer to its string representation and sends it through the UART interface.
@@ -117,7 +126,7 @@ void print_float ( const float value );
  * @param value The hexadecimal number to be printed.
  * @param uppercase If non-zero, the hexadecimal digits will be printed in uppercase; otherwise, they will be printed in lowercase.
  */
-void print_hexa ( const uint32_t value, uint8_t uppercase );
+void print_hexa ( const unsigned int value, uint8_t uppercase );
 
 /**
  * @brief Prints an unsigned integer followed by a newline via the UART interface.
@@ -159,6 +168,6 @@ void println_float ( const float value );
  * @param value The hexadecimal number to be printed.
  * @param uppercase If non-zero, the hexadecimal digits will be printed in uppercase; otherwise, they will be printed in lowercase.
  */
-void println_hexa ( const uint32_t value, uint8_t uppercase );
+void println_hexa ( const unsigned int value, uint8_t uppercase );
 
 #endif // !UART_H
