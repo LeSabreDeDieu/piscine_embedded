@@ -6,27 +6,27 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 15:32:58 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/11 18:10:19 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/13 10:16:30 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 #include <stdlib.h>
 
-#define AHT20_ADDR 0x38 // Adresse I2C du capteur AHT20
+#define SLAVE_ADDR 0x38 // Adresse I2C du capteur AHT20
 
 static uint8_t status = 0;
 
 void init_aht20(void) {
     _delay_ms(40);
     
-    i2c_start(AHT20_ADDR << 1);
+    i2c_start(SLAVE_ADDR << 1);
     i2c_write(0x71);
     status = i2c_read();
     i2c_stop();
     
     if (status & (1 << 3)) {
-        i2c_start(AHT20_ADDR << 1);
+        i2c_start(SLAVE_ADDR << 1);
         i2c_write(0xBE);
         i2c_write(0x08);
         i2c_write(0x00);
@@ -49,7 +49,7 @@ void read_aht20(void) {
     float humidity_sum = 0.0;
     
     for (uint8_t j = 0; j < 3; j++) {
-        i2c_start(AHT20_ADDR << 1);
+        i2c_start(SLAVE_ADDR << 1);
         i2c_write(0xAC);
         i2c_write(0x33);
         i2c_write(0x00);
@@ -58,14 +58,14 @@ void read_aht20(void) {
         _delay_ms(80);
 
         do {
-            i2c_start(AHT20_ADDR << 1);
+            i2c_start(SLAVE_ADDR << 1);
             i2c_write(0x71);
             status = i2c_read();
             i2c_stop();
             _delay_ms(5);
         } while ((status & 0x80));
         
-        i2c_start((AHT20_ADDR << 1) | 1);
+        i2c_start((SLAVE_ADDR << 1) | 1);
         for (uint8_t i = 0; i < 6; i++) {
             data[i] = i2c_read();
         }

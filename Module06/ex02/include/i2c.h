@@ -6,7 +6,7 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 10:59:32 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/11 13:42:32 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/13 10:16:07 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 #include "uart.h"
 
-#define AHT20_ADDR 0x38
+#define SLAVE_ADDR 0x38
 
 void i2c_init( void );
 void i2c_stop( void );
