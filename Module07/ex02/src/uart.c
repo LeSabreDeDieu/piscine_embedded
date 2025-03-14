@@ -6,12 +6,13 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 13:00:39 by sayfallahga       #+#    #+#             */
-/*   Updated: 2025/03/13 12:27:44 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/14 14:44:44 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "uart.h"
 #include <stdio.h>
+#include <string.h>
 
 void uart_init ( void ) {
     UBRR0H = (unsigned char)((int)MYUBBR >> 8);
@@ -63,25 +64,29 @@ void uart_println ( void ) {
 }
 
 void print_uint ( const uint32_t value ) {
-    char *buffer = "";
+    char buffer[11];
+    memset(buffer, 0, 11);
     sprintf(buffer, "%lu", value);
     uart_printstr(buffer);
 }
 
 void print_int ( const int value ) {
-    char *buffer = "";
+    char buffer[12];
+    memset(buffer, 0, 12);
     sprintf(buffer, "%d", value);
     uart_printstr(buffer);
 }
 
 void print_float ( const float value ) {
-    char *buffer = "";
+    char buffer[1024];
+    memset(buffer, 0, 1024);
     sprintf(buffer, "%f", value);
     uart_printstr(buffer);
 }
 
 void print_hexa ( const unsigned int value, uint8_t uppercase ) {
-    char buffer[1024] = {0};
+    char buffer[1024];
+    memset(buffer, 0, 1024);
     if (uppercase) sprintf(buffer, "%02X", value);
     else sprintf(buffer, "%02x", value);
     uart_printstr(buffer);
@@ -103,8 +108,6 @@ void println_float ( const float value ) {
 }
 
 void println_hexa ( const unsigned int value, uint8_t uppercase ) {
-    char buffer[1024] = {0};
-    if (uppercase) sprintf(buffer, "%02X", value);
-    else sprintf(buffer, "%02x", value);
-    uart_printstr(buffer);
+    print_hexa(value, uppercase);
+    uart_printstr("\n\r");
 }

@@ -6,7 +6,7 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 11:19:02 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/14 13:35:55 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/14 14:26:56 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,26 +170,32 @@ void eeprom_write ( void ) {
 	eeprom_hexdump(addr & 0xFFF);
 }
 
-uint16_t find_key ( const char *str ) {
-	char c = 0;
-	for (uint16_t addr = 0; addr < EEPROM_SIZE; addr += SIZE_KVD) {
-		if (EEPROM_read(addr) == STA) {
-			addr++;
-			uint8_t i = 0;
-			while (str[i]) {
-				c = EEPROM_read(addr + i);
-				if ((uint8_t)str[i] != c || c == END) {
-					break;
-				}
-				i++;
-			}
-			if (str[i] == 0) {
-				return addr;
-			}
-		}
-	}
-	return 0xFFFF; // Return an invalid address if key is not found
+#include <stdio.h>
+
+uint16_t find_key(const char *str) {
+    for (uint16_t addr = 0; addr < EEPROM_SIZE; addr += SIZE_KVD) {
+
+        if (EEPROM_read(addr) == STA) {
+            uint16_t key_addr = addr + 1;
+            uint8_t i = 0;
+            char c;
+
+            while (1) {
+                c = EEPROM_read(key_addr + i);
+                if (c == END) break;
+
+                if ((uint8_t)str[i] != c)	break;
+                i++;
+            }
+
+            // Vérifier si la clé complète est trouvée
+            if (str[i] == 0 && c == END)
+                return key_addr;  // Retourne l'adresse de la clé
+        }
+    }
+    return 0xFFFF; // Retourne une adresse invalide si la clé n'est pas trouvée
 }
+
 
 void find_in_EEPROM ( const char *str ) {
 	uint16_t addr = find_key(str);
@@ -199,8 +205,8 @@ void find_in_EEPROM ( const char *str ) {
 		uart_printstr("Empty\n\r");
 		return ;
 	}
-	addr += 15;
-	for (uint16_t i = 0; i < 15; i++) {
+	addr += 17;
+	for (uint16_t i = 0; i < 16; i++) {
 		if (EEPROM_read(addr + i) == END) {
 			buff[i] = 0;
 			break;
@@ -224,17 +230,24 @@ void write_str_on_EEPROM (unsigned int uiAddress, char *str) {
 }
 
 void write_on_EEPROM (char *key, char *value) {
-	for (uint16_t addr = 0; addr < EEPROM_SIZE; addr += SIZE_KVD) {
+	uint16_t addr = 0;
+	if (find_key(key) != 0xFFFF) {
+		uart_printstr("already exists\n\r");
+		return ;
+	}
+	for (addr = 0; addr < EEPROM_SIZE; addr += SIZE_KVD) {
 		if (EEPROM_read(addr) != STA) {
 			EEPROM_write(addr, STA);
 			write_str_on_EEPROM(addr + 1, key);
 			EEPROM_write(addr + 18, STA);
 			write_str_on_EEPROM(addr + 19, value);
-			uart_printstr("done\n\r");
-			return ;
+			print_uint(addr);
+			uart_println();
+			break;
 		}
 	}
-	uart_printstr("No space left !\n\r");
+	if (addr == EEPROM_SIZE)
+		uart_printstr("No space left !\n\r");
 }
 
 void forget_key_EEPROM ( char *key ) {
