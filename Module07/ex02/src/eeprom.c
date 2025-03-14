@@ -6,7 +6,7 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 11:19:02 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/14 12:30:53 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/14 13:35:55 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <string.h>
 
 #define EEPROM_SIZE 1024  		// Taille totale de l'EEPROM
+#define SIZE_KVD 36				// Size key-value-delimiter
 
 #define STA 0x02
 #define MID	0x1F
@@ -171,7 +172,7 @@ void eeprom_write ( void ) {
 
 uint16_t find_key ( const char *str ) {
 	char c = 0;
-	for (uint16_t addr = 0; addr < EEPROM_SIZE; addr += 33) {
+	for (uint16_t addr = 0; addr < EEPROM_SIZE; addr += SIZE_KVD) {
 		if (EEPROM_read(addr) == STA) {
 			addr++;
 			uint8_t i = 0;
@@ -198,8 +199,8 @@ void find_in_EEPROM ( const char *str ) {
 		uart_printstr("Empty\n\r");
 		return ;
 	}
-	addr += 16;
-	for (uint16_t i = 0; i < 16; i++) {
+	addr += 15;
+	for (uint16_t i = 0; i < 15; i++) {
 		if (EEPROM_read(addr + i) == END) {
 			buff[i] = 0;
 			break;
@@ -223,11 +224,12 @@ void write_str_on_EEPROM (unsigned int uiAddress, char *str) {
 }
 
 void write_on_EEPROM (char *key, char *value) {
-	for (uint16_t addr = 0; addr < EEPROM_SIZE; addr += 33) {
+	for (uint16_t addr = 0; addr < EEPROM_SIZE; addr += SIZE_KVD) {
 		if (EEPROM_read(addr) != STA) {
 			EEPROM_write(addr, STA);
 			write_str_on_EEPROM(addr + 1, key);
-			write_str_on_EEPROM(addr + 17, value);
+			EEPROM_write(addr + 18, STA);
+			write_str_on_EEPROM(addr + 19, value);
 			uart_printstr("done\n\r");
 			return ;
 		}

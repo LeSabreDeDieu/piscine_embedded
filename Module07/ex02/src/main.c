@@ -6,7 +6,7 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 08:31:59 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/14 10:07:54 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/14 13:32:56 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#define MAX_LEN 32
+#define MAX_LEN 16
 
 typedef struct s_parsed {
     char command[MAX_LEN];

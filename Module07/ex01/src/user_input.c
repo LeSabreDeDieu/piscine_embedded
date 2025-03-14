@@ -6,7 +6,7 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 15:48:27 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/13 15:57:12 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/14 13:14:32 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,10 @@ void get_input (char *buffer, uint8_t size) {
 				continue;
 			}
 			else if (c == 27) { break; }
-			uart_printchar(c);
-			if (i <= size - 1)
+			if (i <= size - 1) {
+				uart_printchar(c);
 				buffer[i++] = c;
+			}
 		}
 	}
 	buffer[i] = 0;
