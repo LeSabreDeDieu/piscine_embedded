@@ -6,7 +6,7 @@
 /*   By: sgabsi <sgabsi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 15:15:51 by sgabsi            #+#    #+#             */
-/*   Updated: 2025/03/14 21:01:31 by sgabsi           ###   ########.fr       */
+/*   Updated: 2025/03/15 10:18:39 by sgabsi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,9 @@ void init_switch ( void ) {
 
 int main( void )
 {
+
+    int a = 0, b = 0, c = 0;
+    
     init_ADC();
 	SPI_MasterInit();
     init_switch();
